@@ -34,7 +34,7 @@ export default function HomePage() {
       <section className="grid sm:grid-cols-3 gap-4">
         {[
           { k: "Degree", v: "BASc Computer Engineering @ UWaterloo" },
-          { k: "Focus", v: "Trading systems • Data & ML • Front-end UI" },
+          { k: "Focus", v: "Trading systems • Data & ML" },
           { k: "Experience", v: "RBC Capital Markets, TD Global Markets, Curatu.ai" },
         ].map((s) => (
           <div key={s.k} className="card p-5">
