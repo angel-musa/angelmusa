@@ -9,6 +9,10 @@
   --ink: #e5f3ed;
   --muted: #b6d8cd;
   --accent: #2a8a66;
+
+  /* fonts (populated by next/font) */
+  --font-inter: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --font-sora: Sora, var(--font-inter);
 }
 
 html, body {
@@ -19,19 +23,41 @@ html, body {
   min-height: 100%;
 }
 
+/* reusable UI helpers */
 .card {
   @apply rounded-2xl backdrop-blur border border-white/10 shadow-soft;
   background-color: rgb(var(--panel-rgb) / 0.8);
 }
-
 .btn {
   @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 transition;
 }
-
 .link {
   @apply text-brand-200 hover:text-white underline-offset-4 hover:underline;
 }
-
 .container {
   @apply max-w-5xl mx-auto px-4;
 }
+
+/* Subtle grid overlay */
+.bg-grid {
+  mask-image: radial-gradient(ellipse at 40% 0%, black 20%, transparent 70%);
+  background-image: url("/bg-grid.svg");
+  background-size: 24px 24px;
+  opacity: 0.25;
+}
+
+/* Micro parallax (very light) */
+.parallax { transform: translateZ(0); animation: parallax 16s ease-in-out infinite alternate; }
+@keyframes parallax {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(0, -6px, 0); }
+}
+
+/* Animated underline for name */
+.headline-underline { position: relative; display: inline-block; }
+.headline-underline::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: linear-gradient(90deg, #63b89a 0%, #2a8a66 60%, transparent 100%);
+  transform-origin: left; transform: scaleX(0); animation: underline 900ms ease forwards 400ms;
+}
+@keyframes underline { to { transform: scaleX(1); } }

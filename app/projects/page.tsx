@@ -1,3 +1,4 @@
+// app/projects/page.tsx
 export const revalidate = 3600; // cache for 1h
 
 type Repo = {
@@ -10,60 +11,70 @@ type Repo = {
   updated_at: string;
 };
 
+type RepoWithReadme = Repo & { readme?: string | null };
+
 async function getRepos(): Promise<Repo[]> {
   const res = await fetch(
     "https://api.github.com/users/angel-musa/repos?sort=updated&per_page=24",
-    {
-      headers: { Accept: "application/vnd.github+json" },
-      next: { revalidate: 3600 },
-    }
+    { headers: { Accept: "application/vnd.github+json" }, next: { revalidate: 3600 } }
   );
-  if (!res.ok) {
-    console.error("GitHub API error", res.status);
-    return [];
-  }
-  const data = await res.json();
-  return (data as Repo[]).filter((r) => !r.name.startsWith("."));
+  if (!res.ok) return [];
+  return (await res.json()) as Repo[];
 }
 
-function formatDate(s: string) {
-  return new Date(s).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+async function getReadme(owner: string, repo: string): Promise<string | null> {
+  // Try main, then master
+  const tries = [
+    `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
+    `https://raw.githubusercontent.com/${owner}/${repo}/master/README.md`,
+  ];
+  for (const url of tries) {
+    const r = await fetch(url, { next: { revalidate: 3600 } });
+    if (r.ok) {
+      const md = await r.text();
+      // first non-empty paragraph under ~600 chars
+      const para =
+        md.split(/\n{2,}/).map(s => s.trim()).find(p => p && !p.startsWith("#")) || null;
+      return para && para.length <= 600 ? para : (para ? para.slice(0, 600) + "…" : null);
+    }
+  }
+  return null;
+}
+
+function sortWithSprichFirst(list: RepoWithReadme[]) {
+  return list.sort((a, b) => {
+    const aS = a.name.toLowerCase().includes("sprich") ? -1 : 0;
+    const bS = b.name.toLowerCase().includes("sprich") ? -1 : 0;
+    if (aS !== bS) return aS - bS; // sprich first
+    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
   });
 }
 
+import ProjectsGrid from "../../components/ProjectsGrid";
+
 export default async function ProjectsPage() {
   const repos = await getRepos();
+  const cleaned = repos
+    .filter(r => !r.name.startsWith("."))
+    .slice(0, 24);
+
+  // Pull brief readme snippets in parallel
+  const withReadmes: RepoWithReadme[] = await Promise.all(
+    cleaned.map(async r => ({
+      ...r,
+      readme: await getReadme("angel-musa", r.name),
+    }))
+  );
+
+  const ordered = sortWithSprichFirst(withReadmes);
+
   return (
     <section className="space-y-6">
       <h1 className="text-3xl font-bold">Personal Projects</h1>
-      <p className="text-[var(--muted)]">
-        Auto-pulled from my GitHub. Click through for code and readmes.
-      </p>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {repos.map((repo) => (
-          <a
-            key={repo.id}
-            href={repo.html_url}
-            target="_blank"
-            rel="noreferrer"
-            className="card p-5 hover:scale-[1.01] transition"
-          >
-            <h3 className="text-lg font-semibold">{repo.name}</h3>
-            <p className="mt-1 text-sm text-[var(--muted)] line-clamp-3">
-              {repo.description || "—"}
-            </p>
-            <div className="mt-4 text-xs flex items-center justify-between text-[var(--muted)]">
-              <span>{repo.language || "—"}</span>
-              <span>
-                ★ {repo.stargazers_count} · Updated {formatDate(repo.updated_at)}
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
+      <p className="text-[var(--muted)]">A curated set of builds at the intersection of software engineering and markets — trading tools,
+  ML experiments, and clean UIs. Click a card for an overview and setup notes.</p>
+
+      <ProjectsGrid repos={ordered} />
     </section>
   );
 }
