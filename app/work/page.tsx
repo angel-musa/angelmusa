@@ -11,7 +11,7 @@ type Role = {
 
 const ROLES: Role[] = [
   {
-    title: "Quantitative Developer",
+    title: "Quantitative Developer (Co-op)",
     company: "RBC Capital Markets",
     org: "RAMPP — Risk Analytics, Modelling, Product & Pricing",
     when: "Sept 2025–Present",
@@ -22,7 +22,7 @@ const ROLES: Role[] = [
     ],
   },
   {
-    title: "Electronic Trading Analyst",
+    title: "Electronic Trading Analyst (Co-op)",
     company: "TD Securities — Global Markets",
     when: "Jan–Apr 2025",
     bullets: [
@@ -66,8 +66,13 @@ export default function WorkPage() {
 
       <div className="space-y-5">
         {ROLES.map((r) => (
-          <section key={r.title + r.when} className="card p-6 md:p-8 relative">
-            <div className="absolute right-6 top-6 text-sm text-[var(--muted)]">{r.when}</div>
+          <section
+            key={r.title + r.when}
+            className="card p-6 md:p-8 relative transition hover:scale-[1.01] hover:shadow-[0_0_24px_rgba(34,197,94,0.35)]"
+          >
+            <div className="absolute right-6 top-6 text-sm text-[var(--muted)]">
+              {r.when}
+            </div>
             <h3 className="text-xl font-semibold">{r.title}</h3>
             <div className="text-[var(--muted)]">
               {r.company}
