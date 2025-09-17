@@ -1,4 +1,4 @@
 # Angel Musa — Portfolio (Next.js + Tailwind)
 
-A sleek, dark‑green personal site with pages for **Intro/Contact**, **Work Experience**, and **Projects** (auto‑pulled from GitHub).
+Check it out here: https://angelmusa.netlify.app/
 
