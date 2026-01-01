@@ -41,11 +41,16 @@ async function getReadme(owner: string, repo: string): Promise<string | null> {
   return null;
 }
 
-function sortWithSprichFirst(list: RepoWithReadme[]) {
+function sortWithFeaturedFirst(list: RepoWithReadme[]) {
   return list.sort((a, b) => {
-    const aS = a.name.toLowerCase().includes("sprich") ? -1 : 0;
-    const bS = b.name.toLowerCase().includes("sprich") ? -1 : 0;
-    if (aS !== bS) return aS - bS; // sprich first
+    const aName = a.name.toLowerCase();
+    const bName = b.name.toLowerCase();
+
+    // Priority order: sprich -> signalq -> most recently updated
+    const aRank = aName.includes("sprich") ? 0 : aName.includes("signalq") ? 1 : 2;
+    const bRank = bName.includes("sprich") ? 0 : bName.includes("signalq") ? 1 : 2;
+
+    if (aRank !== bRank) return aRank - bRank;
     return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
   });
 }
@@ -54,6 +59,7 @@ import ProjectsGrid from "../../components/ProjectsGrid";
 
 export default async function ProjectsPage() {
   const repos = await getRepos();
+
   const cleaned = repos
     .filter(r => !r.name.startsWith("."))
     .slice(0, 24);
@@ -66,13 +72,37 @@ export default async function ProjectsPage() {
     }))
   );
 
-  const ordered = sortWithSprichFirst(withReadmes);
+  // --- Featured / Guaranteed card: SignalQ (FX Microstructure Toolkit) ---
+  const SIGNALQ_NAME = "signalq";
+  const hasSignalQAlready = withReadmes.some(r => r.name.toLowerCase() === SIGNALQ_NAME);
+
+  const featuredSignalQ: RepoWithReadme = {
+    id: -1, // stable synthetic id
+    name: "signalq",
+    html_url: "https://github.com/angel-musa/signalq",
+    description:
+      "FX microstructure analytics toolkit (tick data, event-time sampling, market impact + feature engineering) built for systematic research.",
+    language: "Python",
+    stargazers_count: 0,
+    updated_at: new Date().toISOString(), // keeps it from looking stale if GitHub list doesn't include it
+    readme:
+      (await getReadme("angel-musa", "signalq")) ??
+      "Tick-level FX research toolkit: event-time bars, microstructure features, and clean pipelines for building + testing systematic signals.",
+  };
+
+  const merged: RepoWithReadme[] = hasSignalQAlready
+    ? withReadmes
+    : [featuredSignalQ, ...withReadmes];
+
+  const ordered = sortWithFeaturedFirst(merged);
 
   return (
     <section className="space-y-6">
       <h1 className="text-3xl font-bold">Personal Projects</h1>
-      <p className="text-[var(--muted)]">A curated set of builds at the intersection of software engineering and markets — trading tools,
-  ML experiments, and clean UIs. Click a card for an overview and setup notes.</p>
+      <p className="text-[var(--muted)]">
+        A curated set of builds at the intersection of software engineering and markets — trading tools,
+        ML experiments, and clean UIs. Click a card for an overview and setup notes.
+      </p>
 
       <ProjectsGrid repos={ordered} />
     </section>
