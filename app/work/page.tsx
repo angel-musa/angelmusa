@@ -5,51 +5,58 @@ type Role = {
   title: string;
   company: string;
   org?: string;
+  location?: string;
   when: string;
   bullets: string[];
 };
 
 const ROLES: Role[] = [
   {
-    title: "Software Developer",
+    title: "Software Engineer",
     company: "RBC Capital Markets",
-    org: "Risk Analytics — RAMPP (Risk Analytics, Modelling, Product & Pricing)",
-    when: "Sept 2025 – Present",
+    org: "Risk Analytics Modelling Pricing & Processing (RAMPP)",
+    location: "Toronto, ON",
+    when: "Sep 2025 – Dec 2025",
     bullets: [
-      "Developed a full-stack server-health monitoring dashboard (Python, Django, React, Node.js) to track test infrastructure and application uptime across 30+ internal servers.",
-      "Built REST APIs for real-time system metrics and visual analytics, improving visibility into regression test performance and reducing incident resolution time by 35%.",
-      "Containerized services using Docker and automated deployments via internal CI/CD pipelines to ensure stable production rollouts and simplified maintenance.",
+      "Built a real-time monitoring dashboard (Python, Django, REST APIs) to track the health of regression-testing servers supporting trader-facing pricing and risk systems across rates and credit desks.",
+      "Designed a workflow-driven analytics tool to monitor regression test runs, surfacing reruns, execution-time distributions, and environment-level anomalies ahead of front-office releases.",
+      "Improved infrastructure stability by reclaiming hundreds of GB of storage using a multithreaded Python utility to archive and clean historical regression outputs.",
     ],
   },
   {
-    title: "Electronic Trading Analyst",
-    company: "TD Securities — Global Markets",
-    when: "Jan – Apr 2025",
+    title: "Global Markets Analyst",
+    company: "TD Securities",
+    org: "Global Markets, Electronic Trading",
+    location: "Toronto, ON",
+    when: "Jan 2025 – Apr 2025",
     bullets: [
-      "Re-engineered 20+ legacy VBA scripts into production-ready Python/C++ modules, cutting runtime by 40%.",
-      "Conducted a quantitative research project on cross-listed equity dislocations, automating data collection and visualization to identify inefficiencies supporting future strategy development.",
-      "Built a commission reconciliation and trade validation system (Python, SQL, VBA) to cross-check 5,000+ daily trades, reducing settlement discrepancies and ensuring accurate P&L attribution across internal systems.",
+      "Automated daily P&L and revenue reporting by computing commissions and PFOF across equity and options flow, producing fiscal-year and month-by-month summaries using Python.",
+      "Built an interlisted equity dislocation analysis pipeline by cleaning, FX-adjusting, and visualizing multi-venue pricing data to support trading strategy research.",
+      "Developed a commission reconciliation system (Python, SQL, VBA) to compare expected client commissions against booked trades, identifying discrepancies in post-trade workflows.",
+      "Reduced post-trade processing time by ~50% by automating trade allocation workflows and generating Fidessa-compatible templates from parsed client instructions.",
     ],
   },
   {
     title: "Software Developer",
     company: "RBC Wealth Management",
-    when: "Jun – Aug 2024",
+    location: "Toronto, ON",
+    when: "Jun 2024 – Aug 2024",
     bullets: [
-      "Developed a Python-based LSTM model for equity direction forecasting using historical time-series data to generate predictive trading signals and trend classifications.",
-      "Integrated the model into a full-stack stock visualization dashboard featuring secure login, watchlists, and real-time news sentiment analysis scraped via Selenium for contextual insights.",
-      "Engineered automated data pipelines (Pandas, NumPy, SQL) to conduct sector-level quantitative research across AI, cybersecurity, and LLM industries.",
+      "Trained a Python-based LSTM momentum model on multi-year equity price data to generate short-horizon directional signals used in internal trade idea discussions.",
+      "Built sector-level analytics pipelines computing relative returns, volatility, and cross-sector correlations to support portfolio positioning decisions.",
+      "Standardized Salesforce household structures and led internal training sessions to improve CRM data consistency across client coverage teams.",
     ],
   },
   {
     title: "Frontend Developer",
     company: "Curatu.ai",
-    when: "Jan – Jun 2024",
+    location: "Remote",
+    when: "Jan 2024 – Jun 2024",
     bullets: [
-      "Employed TypeScript to develop a robust and type-safe skeleton container for a webpage.",
-      "Utilized Git for version control, committing changes for efficient review by the supervisor and team.",
-      "Created unit and integration tests using testing libraries like Jest to ensure code reliability.",
-      "Used Docker to containerize environments, ensuring seamless integration between development and production.",
+      "Developed reusable, type-safe frontend components in TypeScript and React, improving maintainability and consistency across the application.",
+      "Implemented skeleton loading states and layout containers to enhance perceived performance and user experience.",
+      "Wrote unit and integration tests using Jest to ensure component reliability and prevent regressions.",
+      "Containerized frontend services with Docker to streamline local development and ensure parity between development and production environments.",
     ],
   },
 ];
@@ -60,7 +67,7 @@ export default function WorkPage() {
       <header>
         <h1 className="text-3xl font-bold">Work Experience</h1>
         <p className="text-[var(--muted)]">
-          A snapshot of recent roles, drawn from my resume.
+          Experience across trading, analytics, and software engineering.
         </p>
       </header>
 
@@ -73,11 +80,15 @@ export default function WorkPage() {
             <div className="absolute right-6 top-6 text-sm text-[var(--muted)]">
               {r.when}
             </div>
+
             <h3 className="text-xl font-semibold">{r.title}</h3>
+
             <div className="text-[var(--muted)]">
               {r.company}
               {r.org ? <> — {r.org}</> : null}
+              {r.location ? <> • {r.location}</> : null}
             </div>
+
             <ul className="mt-4 space-y-2">
               {r.bullets.map((b, i) => (
                 <li key={i} className="flex gap-3">
