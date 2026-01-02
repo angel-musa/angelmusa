@@ -196,21 +196,20 @@ export default function HomePage() {
         {/* editorial two-column intro */}
         <section className="grid md:grid-cols-12 gap-8 items-start">
           <div className="md:col-span-4">
-            <div className="meta">Editor’s note</div>
+            <div className="meta">Profile</div>
             <h2 className="display mt-3 text-3xl md:text-4xl leading-tight">
-              I like precision.
+              Computer Engineering @ UWaterloo
             </h2>
             <p className="mt-4 text-black/70 text-[15px] leading-relaxed">
-              In markets, that means signal, structure, and speed. Outside it, taste and restraint.
-              This site is a small archive of both.
+              Capital markets experience across trading, analytics, and infrastructure.
             </p>
           </div>
 
           <div className="md:col-span-8">
             <div className="paper glitter p-8 md:p-10">
-              <div className="meta">Pull quote</div>
+              <div className="meta">The Practice</div>
               <p className="display mt-4 text-2xl md:text-3xl leading-snug">
-                “Build like an engineer, edit like a magazine.”
+                Trading systems · Research tools · Market infrastructure
               </p>
               <div className="mt-6 rule" />
               <div className="mt-6 grid md:grid-cols-3 gap-6">
