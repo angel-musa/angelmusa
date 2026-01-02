@@ -82,10 +82,15 @@ export default function HomePage() {
               Angel <span className="headline-underline">Musa</span>
             </h1>
 
-            <div className="meta mt-5">Editor’s Note</div>
-            <p className="mt-3 max-w-2xl text-[15px] md:text-base text-black/70">
-          An editorial record of markets and software.
-            </p>
+<div className="meta mt-4 mb-1">Editor Profile</div>
+<h2 className="max-w-2xl display text-2xl md:text-3xl leading-[1.05]">
+  Computer Engineering @ UWaterloo
+</h2>
+<p className="mt-1 text-[14px] md:text-[15px] text-black/65">
+  Markets · Trading systems · Research tools
+</p>
+
+
           </div>
 
           {/* editorial “cover lines” */}
@@ -191,44 +196,212 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== BELOW THE FOLD: editorial spread ===== */}
-      <div id="below" className="space-y-14">
-        {/* editorial two-column intro */}
-        <section className="grid md:grid-cols-12 gap-8 items-start">
-          <div className="md:col-span-4">
-            <div className="meta">Profile</div>
-            <h2 className="display mt-3 text-3xl md:text-4xl leading-tight">
-              Computer Engineering @ UWaterloo
-            </h2>
-            <p className="mt-4 text-black/70 text-[15px] leading-relaxed">
-              Capital markets experience across trading, analytics, and infrastructure.
-            </p>
-          </div>
+{/* ===== BELOW THE FOLD: editorial spread ===== */}
+<div id="below" className="space-y-14">
+  <section className="grid md:grid-cols-12 gap-8 items-stretch">
+<div className="md:col-span-5 h-full flex flex-col gap-6">
+  {/* DESK NOTES */}
+  <div className="paper glitter p-8 md:p-9">
+    <div className="flex items-start justify-between gap-6">
+      <div>
+        <div className="meta">Index</div>
+        <h2 className="display mt-2 text-2xl md:text-3xl leading-[1.06]">
+          Desk notes
+        </h2>
+      </div>
+      <div className="meta text-[11px] text-black/55">Quick read</div>
+    </div>
 
-          <div className="md:col-span-8">
-            <div className="paper glitter p-8 md:p-10">
-              <div className="meta">The Practice</div>
-              <p className="display mt-4 text-2xl md:text-3xl leading-snug">
-                Trading systems · Research tools · Market infrastructure
-              </p>
-              <div className="mt-6 rule" />
-              <div className="mt-6 grid md:grid-cols-3 gap-6">
-                <div>
-                  <div className="meta">Industry</div>
-                  <div className="mt-2 text-sm text-black/80">Trading + infra</div>
-                </div>
-                <div>
-                  <div className="meta">Editions</div>
-                  <div className="mt-2 text-sm text-black/80">Tools + research</div>
-                </div>
-                <div>
-                  <div className="meta">Collective</div>
-                  <div className="mt-2 text-sm text-black/80">Clubs + collabs</div>
-                </div>
-              </div>
-            </div>
+    <div className="mt-6 rule" />
+
+    <dl className="mt-6 space-y-6">
+      <div className="md:flex md:items-baseline md:gap-6">
+        <dt className="meta md:w-[130px] text-black/60">Currently</dt>
+        <dd className="mt-2 md:mt-0 text-sm leading-relaxed text-black/80">
+          Building trading systems + research tooling for markets.
+        </dd>
+      </div>
+
+      <div className="md:flex md:items-baseline md:gap-6">
+        <dt className="meta md:w-[130px] text-black/60">Studying</dt>
+        <dd className="mt-2 md:mt-0 text-sm leading-relaxed text-black/80">
+          Computer Engineering @ University of Waterloo{" "}
+          <span className="text-black/55">·</span> Minor in Statistics
+        </dd>
+      </div>
+
+      <div className="md:flex md:items-baseline md:gap-6">
+        <dt className="meta md:w-[130px] text-black/60">Interests</dt>
+        <dd className="mt-2 md:mt-0 text-sm leading-relaxed text-black/80">
+          Electronic trading <span className="text-black/55">·</span> market infrastructure{" "}
+          <span className="text-black/55">·</span> microstructure{" "}
+          <span className="text-black/55">·</span> design systems
+        </dd>
+      </div>
+
+      <div className="md:flex md:items-baseline md:gap-6">
+        <dt className="meta md:w-[130px] text-black/60">In progress</dt>
+        <dd className="mt-2 md:mt-0 text-sm leading-relaxed text-black/80">
+          Tools, writing, and small experiments — collected as{" "}
+          <span className="font-medium">Editions</span>.
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  {/* QUOTE CARD (fills remaining height + dark-gold accent) */}
+  <div
+    className={[
+      "paper relative overflow-hidden p-7 md:p-8",
+      "flex-1 flex items-center", // <-- key: stretches to align with right card
+      "border border-black/10",
+    ].join(" ")}
+    style={{
+      background:
+        "linear-gradient(180deg, rgba(var(--gold-rgb)/0.22), rgba(var(--gold-rgb)/0.10) 55%, rgba(0,0,0,0.02))",
+    }}
+  >
+    {/* subtle vignette / shine */}
+    <div
+      className="pointer-events-none absolute inset-0 opacity-[0.55]"
+      style={{
+        background:
+          "radial-gradient(520px 200px at 18% 0%, rgba(var(--gold-rgb)/0.28), transparent 60%)," +
+          "radial-gradient(520px 220px at 85% 110%, rgba(0,0,0,0.06), transparent 60%)",
+      }}
+    />
+
+    {/* left accent rule */}
+    <div
+      className="pointer-events-none absolute left-0 top-0 bottom-0 w-[3px]"
+      style={{
+        background: "linear-gradient(180deg, rgba(var(--gold-rgb)/0.95), rgba(var(--gold-rgb)/0.35))",
+      }}
+    />
+
+    <blockquote className="relative pl-5">
+      <p className="text-[16px] md:text-[17px] italic text-black/70 leading-relaxed">
+        “Take a simple idea and take it seriously.”
+      </p>
+      <footer className="mt-3 meta text-[11px] text-black/55 tracking-[0.32em]">
+        — CHARLIE MUNGER
+      </footer>
+
+      {/* tiny hairline for editorial polish */}
+      <div
+        className="mt-5 h-px w-24 opacity-70"
+        style={{
+          background: "linear-gradient(90deg, rgba(var(--gold-rgb)/0.85), transparent)",
+        }}
+      />
+    </blockquote>
+  </div>
+</div>
+
+{/* RIGHT: THIS ISSUE COVERS */}
+<div className="md:col-span-7 h-full">
+  <div className="paper p-8 md:p-9 h-full flex flex-col">
+    <div>
+      <div className="meta">Feature</div>
+      <h3 className="display mt-2 text-2xl md:text-3xl leading-[1.08]">
+        This issue covers
+      </h3>
+    </div>
+
+    <div className="mt-6 rule" />
+
+    {/* CONTENT grows to fill */}
+    <div className="mt-5 space-y-5 flex-1">
+      {/* Industry */}
+      <Link
+        href="/industry"
+        className="group block rounded-xl p-3 -m-3 hover:bg-black/[0.02] transition"
+      >
+        <div className="flex items-baseline justify-between gap-4">
+          <div className="text-sm font-semibold">Industry</div>
+          <div className="meta text-[11px] text-black/55 group-hover:text-black/70">
+            Open →
           </div>
-        </section>
+        </div>
+        <p className="mt-1 text-[13px] leading-relaxed text-black/65 max-w-prose">
+          Work across trading desks and market infrastructure — analytics, automation,
+          and systems built for speed and reliability.
+        </p>
+      </Link>
+
+      {/* Editions */}
+      <Link
+        href="/editions"
+        className="group block rounded-xl p-3 -m-3 hover:bg-black/[0.02] transition"
+      >
+        <div className="flex items-baseline justify-between gap-4">
+          <div className="text-sm font-semibold">Editions</div>
+          <div className="meta text-[11px] text-black/55 group-hover:text-black/70">
+            Open →
+          </div>
+        </div>
+        <p className="mt-1 text-[13px] leading-relaxed text-black/65 max-w-prose">
+          Tools, experiments, and research projects — dashboards, backtests,
+          and small systems collected as standalone pieces.
+        </p>
+      </Link>
+
+      {/* Collective */}
+      <Link
+        href="/collective"
+        className="group block rounded-xl p-3 -m-3 hover:bg-black/[0.02] transition"
+      >
+        <div className="flex items-baseline justify-between gap-4">
+          <div className="text-sm font-semibold">Collective</div>
+          <div className="meta text-[11px] text-black/55 group-hover:text-black/70">
+            Open →
+          </div>
+        </div>
+        <p className="mt-1 text-[13px] leading-relaxed text-black/65 max-w-prose">
+          Clubs, collaborations, and community work — building alongside others
+          through shared curiosity and momentum.
+        </p>
+      </Link>
+
+      {/* Thoughts */}
+      <Link
+        href="/thoughts"
+        className="group block rounded-xl p-3 -m-3 hover:bg-black/[0.02] transition"
+      >
+        <div className="flex items-baseline justify-between gap-4">
+          <div className="text-sm font-semibold">Thoughts</div>
+          <div className="meta text-[11px] text-black/55 group-hover:text-black/70">
+            Open →
+          </div>
+        </div>
+        <p className="mt-1 text-[13px] leading-relaxed text-black/65 max-w-prose">
+          Writing, notes, and reflections on markets, systems, learning,
+          and the process behind the work.
+        </p>
+      </Link>
+    </div>
+
+    {/* subtle footer to “finish” the page and justify the height */}
+    <div className="pt-6">
+      <div
+        className="h-px w-full opacity-60"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(var(--gold-rgb)/0.45), transparent)",
+        }}
+      />
+      <div className="mt-3 flex items-center justify-between">
+        <div className="meta text-[11px] text-black/50">Navigate the issue</div>
+        <div className="meta text-[11px] text-black/45">01–04</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </section>
+</div>
+
+
 
         {/* ===== INDUSTRY PREVIEW ===== */}
         <section className="space-y-6">
@@ -321,6 +494,5 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-    </div>
   );
 }
