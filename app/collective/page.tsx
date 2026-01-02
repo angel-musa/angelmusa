@@ -42,12 +42,12 @@ export default function CollectivePage() {
       </header>
 
       <section className="space-y-6">
-        <div className="flex items-end justify-between">
+        {/* <div className="flex items-end justify-between">
           <div>
             <div className="meta">Highlights</div>
             <h2 className="display mt-2 text-2xl md:text-3xl">Selected</h2>
           </div>
-        </div>
+        </div> */}
 
         <div className="rule" />
 

@@ -1,5 +1,9 @@
-// app/work/page.tsx
+// app/industry/page.tsx
 "use client";
+
+import Link from "next/link";
+import TickerTape from "../../components/TickerTape";
+
 
 type Role = {
   title: string;
@@ -61,36 +65,43 @@ const ROLES: Role[] = [
   },
 ];
 
-export default function WorkPage() {
+export default function IndustryPage() {
   return (
     <div className="space-y-10">
-      {/* Vogue-style header */}
+      {/* Match Collective header style */}
       <header className="paper glitter p-8 md:p-10">
-        <div className="meta text-xs text-black/50">Portfolio • Work</div>
+        <div className="meta">Section</div>
         <h1 className="display mt-3 text-4xl md:text-6xl leading-[0.95]">
-          Work <span className="headline-underline">Experience</span>
+          The <span className="headline-underline">Industry</span>
         </h1>
-        <p className="mt-5 max-w-3xl text-[15px] md:text-base text-black/60">
-          Trading, analytics, and software engineering — with a bias for systems that ship cleanly.
+        <p className="mt-5 max-w-3xl text-[15px] md:text-base text-black/70">
+          Work across trading desks and market infrastructure — analytics, automation, and systems that ship cleanly.
         </p>
 
         <div className="mt-8 rule" />
+        
 
+        {/* Correct routes for your new structure */}
         <div className="mt-6 flex flex-wrap gap-3">
-          <a className="btn btn-gold" href="/projects">Projects</a>
-          <a className="btn" href="/leadership">Leadership</a>
-          <a className="btn" href="/interests">Interests</a>
+          <Link className="btn btn-gold" href="/industry">
+            Industry
+          </Link>
+          <Link className="btn" href="/editions">
+            Editions
+          </Link>
+          <Link className="btn" href="/collective">
+            Collective
+          </Link>
+          <Link className="btn" href="/thoughts">
+            Thoughts
+          </Link>
         </div>
       </header>
 
+      <TickerTape />
+
       {/* Roles */}
       <section className="space-y-6">
-        {/* <div className="flex items-end justify-between">
-          <div>
-            <div className="meta text-xs text-black/50">Section</div>
-            <h2 className="display mt-2 text-2xl md:text-3xl">Roles</h2>
-          </div>
-        </div> */}
         <div className="rule" />
 
         <div className="grid grid-cols-1 gap-6">
@@ -104,7 +115,6 @@ export default function WorkPage() {
                 "focus:outline-none focus:ring-2 focus:ring-[rgba(var(--gold-rgb)/0.40)]",
               ].join(" ")}
             >
-              {/* subtle gold corner highlight on hover */}
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition"
                 style={{
@@ -145,16 +155,16 @@ export default function WorkPage() {
                 ))}
               </ul>
 
-              {/* gold hairline at bottom */}
               <div
                 className="pointer-events-none absolute left-8 right-8 bottom-6 h-px opacity-70"
                 style={{
-                  background:
-                    "linear-gradient(90deg, transparent, rgba(var(--gold-rgb)/0.70), transparent)",
+                  background: "linear-gradient(90deg, transparent, rgba(var(--gold-rgb)/0.70), transparent)",
                 }}
               />
             </section>
           ))}
+
+          <TickerTape />
         </div>
       </section>
     </div>

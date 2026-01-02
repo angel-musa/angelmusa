@@ -1,5 +1,8 @@
 // app/projects/page.tsx
+
+import Link from "next/link";
 export const revalidate = 3600; // cache for 1h
+
 
 type Repo = {
   id: number;
@@ -91,24 +94,37 @@ export default async function ProjectsPage() {
   return (
     <section className="space-y-8">
       {/* Vogue-style header */}
+      {/* Editions-style header (matches Industry) */}
       <header className="paper glitter p-8 md:p-10">
-        <div className="meta text-xs text-black/50">Portfolio • Projects</div>
+        <div className="meta">Section</div>
         <h1 className="display mt-3 text-4xl md:text-6xl leading-[0.95]">
-          Personal <span className="headline-underline">Projects</span>
+          The <span className="headline-underline">Editions</span>
         </h1>
-        <p className="mt-5 max-w-3xl text-[15px] md:text-base text-black/60">
-          A curated set of builds across trading tools, research pipelines, and clean interfaces. Click a
-          card for an overview and setup notes.
+        <p className="mt-5 max-w-3xl text-[15px] md:text-base text-black/70">
+          Tools, experiments, and research projects — dashboards, backtests, and small systems collected as standalone pieces.
         </p>
 
         <div className="mt-8 rule" />
 
+        {/* Top nav (same as Industry, routes to new structure) */}
         <div className="mt-6 flex flex-wrap gap-3">
-          <a className="btn btn-gold" href="https://github.com/angel-musa" target="_blank" rel="noreferrer">
+          <Link className="btn" href="/industry">Industry</Link>
+          <Link className="btn btn-gold" href="/editions">Editions</Link>
+          <Link className="btn" href="/collective">Collective</Link>
+          <Link className="btn" href="/thoughts">Thoughts</Link>
+
+          {/* optional external link (kept from your old header) */}
+          <a
+            className="btn"
+            href="https://github.com/angel-musa"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub <span aria-hidden>↗</span>
           </a>
         </div>
       </header>
+
 
       {/* subtle section label + divider (gold shows via underline + glitter) */}
       {/* <div className="flex items-end justify-between">
