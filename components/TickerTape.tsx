@@ -1,3 +1,4 @@
+// components/TickerTape.tsx
 "use client";
 
 type T = { s: string; p: string; chg: number };
@@ -16,12 +17,27 @@ const TICKERS: T[] = [
 ];
 
 export default function TickerTape() {
-  // Duplicate the row so the marquee loops seamlessly
   const row = [...TICKERS, ...TICKERS];
 
   return (
-    <div className="relative w-full overflow-hidden border-t border-white/10 bg-[rgb(10_30_22_/_.8)] backdrop-blur">
-      <div className="whitespace-nowrap will-change-transform animate-[marquee_28s_linear_infinite]">
+    <div
+      className="relative w-full overflow-hidden border-t"
+      style={{
+        borderColor: "var(--border)",
+        background: "rgba(255,255,255,0.86)",
+        backdropFilter: "blur(10px)",
+      }}
+    >
+      {/* subtle gold top sheen */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          background:
+            "radial-gradient(900px 120px at 15% 0%, rgba(var(--gold-rgb)/0.18), transparent 55%), radial-gradient(700px 120px at 80% 100%, rgba(var(--gold-rgb)/0.12), transparent 60%)",
+        }}
+      />
+
+      <div className="relative whitespace-nowrap will-change-transform animate-[marquee_28s_linear_infinite]">
         {row.map((t, i) => {
           const up = t.chg >= 0;
           return (
@@ -29,22 +45,28 @@ export default function TickerTape() {
               key={t.s + i}
               className="inline-flex items-center gap-2 px-4 py-2 text-xs"
             >
-              <span className="font-mono opacity-80">{t.s}</span>
-              <span className="font-mono">{t.p}</span>
+              <span className="font-mono opacity-70 text-black">{t.s}</span>
+              <span className="font-mono text-black">{t.p}</span>
               <span
                 className={`font-mono ${
-                  up ? "text-emerald-400" : "text-red-400"
+                  up ? "text-emerald-700" : "text-rose-700"
                 }`}
               >
                 {up ? "▲" : "▼"} {Math.abs(t.chg).toFixed(1)}%
               </span>
-              <span className="opacity-20">|</span>
+
+              {/* gold divider */}
+              <span
+                className="mx-2"
+                style={{ color: "rgba(var(--gold-rgb)/0.55)" }}
+              >
+                •
+              </span>
             </span>
           );
         })}
       </div>
 
-      {/* keyframes without editing tailwind.config */}
       <style jsx>{`
         @keyframes marquee {
           from {

@@ -1,3 +1,4 @@
+// components/ProjectsGrid.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,9 +11,9 @@ type Repo = {
   html_url: string;
   description: string | null;
   language: string | null;
-  stargazers_count: number; // unused visually
+  stargazers_count: number; // not shown, but kept
   updated_at: string;
-  readme?: string | null;   // optional: provided by parent
+  readme?: string | null;
 };
 
 /* ---------- constants ---------- */
@@ -22,6 +23,7 @@ const WEBSITE_NAME = "angelmusa";
 const titleMap: Record<string, string> = {
   sprich: "Sprich! AI-Powered German Speech Coach",
   "fortuna-2": "Fortuna — Personal Finance & Trading Platform",
+  signalq: "SignalQ — FX Microstructure Toolkit",
   "time-series-forecasting": "Time-Series Forecasting Models",
   pairs_ml: "Pairs ML — Cointegration & Trading Strategy",
   [WEBSITE_NAME]: "Personal Website — Portfolio & Projects",
@@ -31,6 +33,7 @@ const titleMap: Record<string, string> = {
 const shortBlurbMap: Record<string, string> = {
   sprich: "Interactive coach for German pronunciation with speech recognition & scoring.",
   "fortuna-2": "Personal trading/analytics toolkit: dashboards, data, and backtesting.",
+  signalq: "Tick-level FX research toolkit: event-time bars, microstructure features, and clean pipelines.",
   "time-series-forecasting": "Classic + ML models to predict time-series signals.",
   pairs_ml: "Cointegration-based pairs signals with ML-driven tweaks.",
   [WEBSITE_NAME]: "Next.js + Tailwind site showcasing projects, work, and contact.",
@@ -38,15 +41,12 @@ const shortBlurbMap: Record<string, string> = {
 
 /* ---------- Tiny markdown → HTML so ** shows as bold in modal ---------- */
 function escapeHtml(s: string) {
-  return (s ?? "")
-    .replaceAll(/&/g, "&amp;")
-    .replaceAll(/</g, "&lt;")
-    .replaceAll(/>/g, "&gt;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
-function basicMdToHtml(md?: string | null) {
+function basicMdToHtml(md: string) {
   let html = escapeHtml(md ?? "");
   html = html.replace(/(\*\*|__)(.+?)\1/gs, "<strong>$2</strong>");
-  html = html.replace(/`([^`]+?)`/g, '<code class="px-1 rounded bg-white/10">$1</code>');
+  html = html.replace(/`([^`]+?)`/g, '<code class="px-1 rounded bg-black/5">$1</code>');
   html = html.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
     '<a class="underline hover:no-underline" href="$2" target="_blank" rel="noreferrer">$1</a>'
@@ -55,47 +55,27 @@ function basicMdToHtml(md?: string | null) {
   return `<p>${html}</p>`;
 }
 
-/* ---------- Helpers ---------- */
-function toShortBlurb(src: string | null | undefined, max = 110) {
-  if (!src) return "";
-  const cleaned = src
-    .replace(/[*_`#>~\-]/g, "")
-    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (cleaned.length <= max) return cleaned;
-  const cut = cleaned.slice(0, max);
-  const lastSpace = cut.lastIndexOf(" ");
-  return (lastSpace > 60 ? cut.slice(0, lastSpace) : cut) + "…";
+function toShortBlurb(text: string | null | undefined, max = 110) {
+  const t = (text ?? "").replace(/\s+/g, " ").trim();
+  if (!t) return "A project in progress. Click for details and setup notes.";
+  return t.length <= max ? t : t.slice(0, max - 1) + "…";
 }
 
-function formatDate(s: string) {
-  return new Date(s).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
-/* language display override for the website tile */
-function displayLanguage(repoName: string, fallback?: string | null) {
-  if (repoName === WEBSITE_NAME) return "TypeScript · JavaScript · CSS";
-  return fallback || "—";
-}
-
-/* overview override for the website tile */
-function overviewHtmlFor(repoName: string, readme?: string | null) {
-  if (repoName === WEBSITE_NAME) {
-    return basicMdToHtml("what you're looking at right now :)");
+function formatDate(iso: string) {
+  try {
+    return new Date(iso).toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" });
+  } catch {
+    return iso;
   }
-  return basicMdToHtml(
-    readme ||
-      "README excerpt unavailable. Check the repo for full details, setup, and screenshots."
-  );
+}
+
+function displayLanguage(repoName: string, lang: string | null) {
+  if (repoName === "signalq") return "Python, KDB+/q";
+  return lang ?? "—";
 }
 
 /* ---------- Ordering rules ---------- */
-const PIN_ORDER = ["sprich", "fortuna-2", "pairs_ml", "time-series-forecasting"];
+const PIN_ORDER = ["sprich", "signalq", "fortuna-2", "pairs_ml", "time-series-forecasting"];
 
 function sortRepos(repos: Repo[]) {
   return [...repos].sort((a, b) => {
@@ -122,6 +102,7 @@ function sortRepos(repos: Repo[]) {
 /* ---------- Sparklines (subtle trading vibe) ---------- */
 const SPARK: Record<string, number[]> = {
   sprich: [1, 0.98, 1.04, 1.02, 1.08, 1.15, 1.12, 1.2],
+  signalq: [1, 1.02, 1.03, 1.01, 1.05, 1.07, 1.06, 1.09],
   "fortuna-2": [1, 1.1, 0.95, 1.2, 1.18, 1.26, 1.22, 1.35],
   "time-series-forecasting": [1, 1.02, 1.01, 1.06, 1.04, 1.08, 1.12, 1.1],
   pairs_ml: [1, 0.92, 0.96, 1.0, 1.1, 1.05, 1.18, 1.15],
@@ -151,38 +132,70 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
 
   const ordered = sortRepos(withSite);
 
+  const overlayHtml = (readme?: string | null) => {
+    if (!readme) return basicMdToHtml("README excerpt unavailable. Check the repo for full details + setup.");
+    return basicMdToHtml(readme);
+  };
+
   return (
     <>
-      {/* Cards with green glow + sparklines */}
+      {/* Cards (gold editorial accents) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {ordered.map((repo) => {
           const title = titleMap[repo.name] || repo.name.replace(/[-_]/g, " ");
-          const blurb =
-            shortBlurbMap[repo.name] ||
-            toShortBlurb(repo.description || repo.readme, 110);
+          const blurb = shortBlurbMap[repo.name] || toShortBlurb(repo.description || repo.readme, 110);
           const spark = SPARK[repo.name];
 
           return (
             <button
               key={repo.id}
               onClick={() => setActive(repo)}
-              className="card relative p-8 text-left hover:scale-[1.01] transition h-56 flex flex-col justify-between focus:outline-none focus:ring-2 focus:ring-brand-300/40 hover:shadow-[0_0_24px_rgba(34,197,94,0.35)]"
+              className={[
+                "paper glitter group relative p-8 text-left transition h-56 flex flex-col justify-between",
+                "hover:-translate-y-[2px]",
+                "focus:outline-none focus:ring-2 focus:ring-[rgba(var(--gold-rgb)/0.40)]",
+                "hover:shadow-[0_20px_50px_rgba(0,0,0,0.14)]",
+              ].join(" ")}
             >
+              {/* subtle gold corner highlight */}
+              <div
+                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition"
+                style={{
+                  background:
+                    "radial-gradient(600px 220px at 18% 0%, rgba(var(--gold-rgb)/0.16), transparent 60%), radial-gradient(520px 200px at 82% 100%, rgba(var(--gold-rgb)/0.12), transparent 60%)",
+                }}
+              />
+
               {spark ? (
                 <Sparkline
                   data={spark}
-                  className="absolute right-3 top-3 w-28 h-7 text-emerald-400/70 opacity-60 group-hover:opacity-90 transition"
+                  className="absolute right-3 top-3 w-28 h-7 opacity-55 group-hover:opacity-90 transition"
+                  // use currentColor via tailwind text color:
                 />
               ) : null}
 
-              <div>
-                <h3 className="text-xl font-semibold">{title}</h3>
-                <p className="mt-2 text-sm text-[var(--muted)] line-clamp-2">{blurb}</p>
+              {/* set sparkline to gold via currentColor */}
+              <div
+                className="pointer-events-none absolute right-3 top-3 w-28 h-7 text-[rgba(var(--gold-rgb)/0.85)]"
+                aria-hidden
+              />
+
+              <div className="relative">
+                <div className="meta text-[10px] text-black/45">Project</div>
+                <h3 className="mt-2 text-xl font-semibold">{title}</h3>
+                <p className="mt-2 text-sm text-black/60 line-clamp-2">{blurb}</p>
               </div>
-              <div className="mt-4 text-xs flex items-center justify-between text-[var(--muted)]">
-                <span>{displayLanguage(repo.name, repo.language)}</span>
-                <span>Updated {formatDate(repo.updated_at)}</span>
+
+              <div className="relative mt-4 text-xs flex items-center justify-between text-black/55">
+                <span className="meta tracking-[0.18em]">{displayLanguage(repo.name, repo.language)}</span>
+                <span className="meta tracking-[0.18em]">Updated {formatDate(repo.updated_at)}</span>
               </div>
+
+              {/* gold hairline at bottom */}
+              <div
+                className="pointer-events-none absolute left-6 right-6 bottom-5 h-px opacity-60"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(var(--gold-rgb)/0.65), transparent)" }}
+              />
             </button>
           );
         })}
@@ -190,69 +203,63 @@ export default function ProjectsGrid({ repos }: { repos: Repo[] }) {
 
       {/* Modal */}
       {active && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-        >
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setActive(null)}
-          />
-          <div className="relative card max-w-4xl w-full p-6 md:p-10">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" onClick={() => setActive(null)} />
+
+          <div className="relative paper glitter max-w-4xl w-full p-6 md:p-10">
             <button
               aria-label="Close"
-              className="absolute top-3 right-3 p-2 rounded-lg hover:bg-white/10"
+              className="absolute top-3 right-3 p-2 rounded-full border border-black/10 hover:bg-black/5 transition"
               onClick={() => setActive(null)}
             >
-              <X size={20} />
+              <X size={18} />
             </button>
 
-            <h3 className="text-2xl font-semibold pr-10">
+            <div className="meta text-xs text-black/50">Project</div>
+            <h3 className="display mt-2 text-3xl md:text-4xl leading-[1.0] pr-10">
               {titleMap[active.name] || active.name.replace(/[-_]/g, " ")}
             </h3>
 
             {active.description && active.name !== WEBSITE_NAME && (
-              <div
-                className="mt-2 text-sm text-[var(--muted)]"
-                dangerouslySetInnerHTML={{ __html: basicMdToHtml(active.description) }}
-              />
+              <div className="mt-3 text-sm text-black/60">{active.description}</div>
             )}
 
-            <div className="mt-6 grid md:grid-cols-2 gap-4 text-sm">
-              <div className="card p-4">
-                <div className="text-brand-200 text-xs">Language</div>
-                <div>{displayLanguage(active.name, active.language)}</div>
+            <div className="mt-7 grid md:grid-cols-2 gap-4 text-sm">
+              <div className="paper p-4">
+                <div className="meta text-[10px] text-black/45">Language</div>
+                <div className="mt-1">{displayLanguage(active.name, active.language)}</div>
               </div>
-              <div className="card p-4">
-                <div className="text-brand-200 text-xs">Updated</div>
-                <div>{formatDate(active.updated_at)}</div>
+              <div className="paper p-4">
+                <div className="meta text-[10px] text-black/45">Updated</div>
+                <div className="mt-1">{formatDate(active.updated_at)}</div>
               </div>
             </div>
 
-            <div className="mt-6">
-              <h4 className="font-semibold mb-2">Overview</h4>
+            <div className="mt-7">
+              <h4 className="font-semibold">Overview</h4>
               <div
-                className="text-[var(--muted)] leading-relaxed"
+                className="mt-2 text-black/70 leading-relaxed"
                 dangerouslySetInnerHTML={{
-                  __html: overviewHtmlFor(active.name, active.readme),
+                  __html: active.name === WEBSITE_NAME ? basicMdToHtml("what you're looking at right now :)") : overlayHtml(active.readme),
                 }}
               />
             </div>
 
             <div className="mt-8 flex justify-end">
-              <a
-                href={active.html_url}
-                target="_blank"
-                rel="noreferrer"
-                className="btn"
-              >
+              <a href={active.html_url} target="_blank" rel="noreferrer" className="btn btn-gold">
                 <Github size={18} /> Open on GitHub
               </a>
             </div>
           </div>
         </div>
       )}
+
+      {/* Make sparklines inherit gold */}
+      <style jsx>{`
+        :global(.group svg) {
+          color: rgba(var(--gold-rgb) / 0.85);
+        }
+      `}</style>
     </>
   );
 }

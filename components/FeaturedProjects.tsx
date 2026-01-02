@@ -66,14 +66,14 @@ export default function FeaturedProjects() {
           <button
             key={proj.key}
             onClick={() => setActive(proj)}
-            className="card relative p-6 group overflow-hidden hover:scale-[1.01] transition text-left hover:shadow-[0_0_24px_rgba(34,197,94,0.35)]"
+            className="card relative p-6 group overflow-hidden hover:scale-[1.01] transition text-left hover:shadow-[0_0_24px_rgba(var(--gold-rgb)/0.28)]"
           >
             {/* subtle sparkline */}
             <Sparkline
               data={SPARK[proj.key]}
-              className="absolute right-3 top-3 w-28 h-7 text-emerald-400/70 opacity-60 group-hover:opacity-90 transition"
+              className="absolute right-3 top-3 w-28 h-7 text-[rgba(var(--gold-rgb)/0.75)] opacity-60 group-hover:opacity-90 transition"
             />
-            <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-emerald-500/10 blur-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition" />
+            <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-[rgba(var(--gold-rgb)/0.10)] blur-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition" />
 
             <h3 className="text-xl font-semibold">{proj.display}</h3>
 
@@ -104,11 +104,11 @@ export default function FeaturedProjects() {
 
             <div className="mt-6 grid md:grid-cols-2 gap-4 text-sm">
               <div className="card p-4">
-                <div className="text-brand-200 text-xs">Language</div>
+                <div className="meta text-[10px] text-black/50">Language</div>
                 <div>{active.language}</div>
               </div>
               <div className="card p-4">
-                <div className="text-brand-200 text-xs">Updated</div>
+                <div className="meta text-[10px] text-black/50">Updated</div>
                 <div>{active.updated}</div>
               </div>
             </div>

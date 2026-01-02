@@ -23,7 +23,6 @@ async function getRepos(): Promise<Repo[]> {
 }
 
 async function getReadme(owner: string, repo: string): Promise<string | null> {
-  // Try main, then master
   const tries = [
     `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
     `https://raw.githubusercontent.com/${owner}/${repo}/master/README.md`,
@@ -32,10 +31,9 @@ async function getReadme(owner: string, repo: string): Promise<string | null> {
     const r = await fetch(url, { next: { revalidate: 3600 } });
     if (r.ok) {
       const md = await r.text();
-      // first non-empty paragraph under ~600 chars
       const para =
-        md.split(/\n{2,}/).map(s => s.trim()).find(p => p && !p.startsWith("#")) || null;
-      return para && para.length <= 600 ? para : (para ? para.slice(0, 600) + "…" : null);
+        md.split(/\n{2,}/).map((s) => s.trim()).find((p) => p && !p.startsWith("#")) || null;
+      return para && para.length <= 600 ? para : para ? para.slice(0, 600) + "…" : null;
     }
   }
   return null;
@@ -60,13 +58,10 @@ import ProjectsGrid from "../../components/ProjectsGrid";
 export default async function ProjectsPage() {
   const repos = await getRepos();
 
-  const cleaned = repos
-    .filter(r => !r.name.startsWith("."))
-    .slice(0, 24);
+  const cleaned = repos.filter((r) => !r.name.startsWith(".")).slice(0, 24);
 
-  // Pull brief readme snippets in parallel
   const withReadmes: RepoWithReadme[] = await Promise.all(
-    cleaned.map(async r => ({
+    cleaned.map(async (r) => ({
       ...r,
       readme: await getReadme("angel-musa", r.name),
     }))
@@ -74,35 +69,55 @@ export default async function ProjectsPage() {
 
   // --- Featured / Guaranteed card: SignalQ (FX Microstructure Toolkit) ---
   const SIGNALQ_NAME = "signalq";
-  const hasSignalQAlready = withReadmes.some(r => r.name.toLowerCase() === SIGNALQ_NAME);
+  const hasSignalQAlready = withReadmes.some((r) => r.name.toLowerCase() === SIGNALQ_NAME);
 
   const featuredSignalQ: RepoWithReadme = {
-    id: -1, // stable synthetic id
+    id: -1,
     name: "signalq",
     html_url: "https://github.com/angel-musa/signalq",
     description:
       "FX microstructure analytics toolkit (tick data, event-time sampling, market impact + feature engineering) built for systematic research.",
     language: "Python",
     stargazers_count: 0,
-    updated_at: new Date().toISOString(), // keeps it from looking stale if GitHub list doesn't include it
+    updated_at: new Date().toISOString(),
     readme:
       (await getReadme("angel-musa", "signalq")) ??
       "Tick-level FX research toolkit: event-time bars, microstructure features, and clean pipelines for building + testing systematic signals.",
   };
 
-  const merged: RepoWithReadme[] = hasSignalQAlready
-    ? withReadmes
-    : [featuredSignalQ, ...withReadmes];
-
+  const merged: RepoWithReadme[] = hasSignalQAlready ? withReadmes : [featuredSignalQ, ...withReadmes];
   const ordered = sortWithFeaturedFirst(merged);
 
   return (
-    <section className="space-y-6">
-      <h1 className="text-3xl font-bold">Personal Projects</h1>
-      <p className="text-[var(--muted)]">
-        A curated set of builds at the intersection of software engineering and markets — trading tools,
-        ML experiments, and clean UIs. Click a card for an overview and setup notes.
-      </p>
+    <section className="space-y-8">
+      {/* Vogue-style header */}
+      <header className="paper glitter p-8 md:p-10">
+        <div className="meta text-xs text-black/50">Portfolio • Projects</div>
+        <h1 className="display mt-3 text-4xl md:text-6xl leading-[0.95]">
+          Personal <span className="headline-underline">Projects</span>
+        </h1>
+        <p className="mt-5 max-w-3xl text-[15px] md:text-base text-black/60">
+          A curated set of builds across trading tools, research pipelines, and clean interfaces. Click a
+          card for an overview and setup notes.
+        </p>
+
+        <div className="mt-8 rule" />
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a className="btn btn-gold" href="https://github.com/angel-musa" target="_blank" rel="noreferrer">
+            GitHub <span aria-hidden>↗</span>
+          </a>
+        </div>
+      </header>
+
+      {/* subtle section label + divider (gold shows via underline + glitter) */}
+      {/* <div className="flex items-end justify-between">
+        <div>
+          <div className="meta text-xs text-black/50">Section</div>
+          <h2 className="display mt-2 text-2xl md:text-3xl">Selected repos</h2>
+        </div>
+      </div> */}
+      <div className="rule" />
 
       <ProjectsGrid repos={ordered} />
     </section>
