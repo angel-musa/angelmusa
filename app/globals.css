@@ -38,11 +38,23 @@ html, body {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
 }
+
+/* Typography */
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
 .meta {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   text-transform: uppercase;
   letter-spacing: 0.22em;
+
+  /* readability upgrades */
+  font-size: 12px;                 /* was effectively ~10px in many places */
+  color: rgba(0, 0, 0, 0.62);       /* stronger contrast */
 }
+
 
 /* Links */
 .navlink {
