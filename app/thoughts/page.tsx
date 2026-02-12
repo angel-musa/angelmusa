@@ -168,41 +168,58 @@ export default function ThoughtsPage() {
                 </div>
 
                 <h3 className="mt-4 text-2xl md:text-3xl font-semibold leading-tight">
-                  Working note: volatility, attention, and decision hygiene
+                  Inventory Risk and Market Structure
                 </h3>
                 <p className="mt-3 text-[14px] md:text-[15px] text-black/65 leading-relaxed max-w-prose">
-                  A draft on signal extraction, incentives, and what “discipline”
-                  means in practice.
+                  An examination of how dealer inventory constraints, positioning, and liquidity
+                  provision shape volatility and price dynamics.
                 </p>
               </div>
             </div>
           </div>
+             </div>
 
-          {/* right column placeholders */}
-          <div className="md:col-span-5 grid gap-5">
-            {[
-              { tag: "Fashion", title: "Constraint and silhouette", desc: "Notes on structure, tolerance, and reduction." },
-              { tag: "Languages", title: "Language learning as iteration", desc: "Cadence, error correction, retention." },
-              { tag: "Essays", title: "Taste, ambition, and selection", desc: "A draft about priorities and refusal." },
-            ].map((x) => (
-              <div key={x.title} className="paper p-7 relative overflow-hidden">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-                    {x.tag}
-                  </span>
-                  <span className="meta text-[11px] text-black/55">draft</span>
-                </div>
 
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold leading-snug">{x.title}</h3>
-                  <p className="mt-2 text-[13px] text-black/65 leading-relaxed">
-                    {x.desc}
-                  </p>
-                </div>
+        {/* right column placeholders */}
+        <div className="md:col-span-5 grid gap-5">
+          {[
+            {
+              tag: "Fashion",
+              title: "Young Women as Economic Indicators",
+              desc:
+                "Young women are often the earliest adopters of risk, trend, and discretionary spending, making them subtle but powerful leading indicators of expansion and contraction.",
+            },
+            {
+              tag: "Languages",
+              title: "Language as Cultural Architecture: On German Etymology",
+              desc:
+                "A study of how German word origins encode cultural priorities, social structures, and ways of organizing thought.",
+            },
+            {
+              tag: "Essays",
+              title: "Boredom as a Method",
+              desc:
+                "What happens when you quite literally watch paint dry and how that fixed my attention span.",
+            },
+          ].map((x) => (
+            <div key={x.title} className="paper p-7 relative overflow-hidden">
+              <div className="flex items-center justify-between gap-4">
+                <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
+                  {x.tag}
+                </span>
+                <span className="meta text-[11px] text-black/55">draft</span>
               </div>
-            ))}
-          </div>
+
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold leading-snug">{x.title}</h3>
+                <p className="mt-2 text-[13px] text-black/65 leading-relaxed">
+                  {x.desc}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
+        
       </section>
 
       {/* ===== FOOTER NOTE ===== */}
