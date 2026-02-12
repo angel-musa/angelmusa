@@ -3,12 +3,49 @@
 
 import Link from "next/link";
 
+type DraftCard = {
+  tag: "Markets" | "Fashion" | "Languages" | "Essays";
+  title: string;
+  desc: string;
+  status: "draft" | "pending";
+  year?: string;
+};
+
+const LEAD: DraftCard = {
+  tag: "Markets",
+  title: "Inventory Risk and Market Structure",
+  desc: "An examination of how dealer inventory constraints, positioning, and liquidity provision shape volatility and price dynamics.",
+  status: "pending",
+  year: "2026",
+};
+
+const DRAFTS: DraftCard[] = [
+  {
+    tag: "Fashion",
+    title: "Young Women as Economic Indicators",
+    desc: "Young women are often the earliest adopters of risk, trend, and discretionary spending, making them subtle but powerful leading indicators of expansion and contraction.",
+    status: "draft",
+  },
+  {
+    tag: "Languages",
+    title: "Language as Cultural Architecture: On German Etymology",
+    desc: "A study of how German word origins encode cultural priorities, social structures, and ways of organizing thought.",
+    status: "draft",
+  },
+  {
+    tag: "Essays",
+    title: "Boredom as a Method",
+    desc: "What happens when you quite literally watch paint dry, and how it fixed my attention span.",
+    status: "draft",
+  },
+];
+
 export default function ThoughtsPage() {
   return (
     <div className="space-y-12">
       {/* ===== HEADER ===== */}
       <header className="paper glitter p-8 md:p-10 relative overflow-hidden">
-        {/* subtle shapes (keep your aesthetic, but silent) */}
+        {/* subtle shapes */}
         <div className="pointer-events-none absolute inset-0">
           <div
             className="absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-[0.18]"
@@ -20,7 +57,8 @@ export default function ThoughtsPage() {
           <div
             className="absolute -left-20 top-10 h-40 w-40 rounded-[28px] rotate-12 opacity-[0.10]"
             style={{
-              background: "linear-gradient(180deg, rgba(0,0,0,0.10), transparent)",
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.10), transparent)",
             }}
           />
           <div
@@ -70,28 +108,23 @@ export default function ThoughtsPage() {
 
           <div className="mt-6 space-y-4 text-sm text-black/75 leading-relaxed">
             <p>
-              I’m building a place for longer-form writing and working notes.
-              The structure is live; the content is staged.
+              I’m building a place for longer-form writing and working notes. The
+              structure is live; the content is staged.
             </p>
             <p className="text-black/65">
-              Topics will include markets, systems, language learning, and design
-              constraints.
+              Topics include markets, systems, language, and design constraints.
             </p>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-              essays
-            </span>
-            <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-              notes
-            </span>
-            <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-              reading log
-            </span>
-            <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-              references
-            </span>
+            {["essays", "notes", "reading log", "references"].map((x) => (
+              <span
+                key={x}
+                className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70"
+              >
+                {x}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -110,28 +143,25 @@ export default function ThoughtsPage() {
             <div className="mt-6 rule" />
 
             <ul className="mt-6 space-y-3 text-sm text-black/75">
-              <li className="flex items-start gap-3">
-                <span className="meta text-[11px] text-black/45 w-10">01</span>
-                <span>Writing index with tags and archive.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="meta text-[11px] text-black/45 w-10">02</span>
-                <span>Reading notes: reaction, question, connection.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="meta text-[11px] text-black/45 w-10">03</span>
-                <span>Listening shelf (optional).</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="meta text-[11px] text-black/45 w-10">04</span>
-                <span>Monthly entries and references.</span>
-              </li>
+              {[
+                "Writing index with tags and archive.",
+                "Reading notes: reaction, question, connection.",
+                "Listening shelf (optional).",
+                "Monthly entries and references.",
+              ].map((t, i) => (
+                <li key={t} className="flex items-start gap-3">
+                  <span className="meta text-[11px] text-black/45 w-10">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>{t}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </section>
 
-      {/* ===== PLACEHOLDER GRID (looks like content without cringe) ===== */}
+      {/* ===== DRAFT QUEUE (fixed: compact + proper grid nesting) ===== */}
       <section className="space-y-6">
         <div className="flex items-end justify-between gap-6">
           <div>
@@ -143,8 +173,8 @@ export default function ThoughtsPage() {
 
         <div className="rule" />
 
-        <div className="grid md:grid-cols-12 gap-5">
-          {/* lead placeholder */}
+        <div className="grid md:grid-cols-12 gap-5 items-start">
+          {/* lead card */}
           <div className="md:col-span-7 paper glitter p-7 md:p-9 relative overflow-hidden">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.18]"
@@ -156,70 +186,71 @@ export default function ThoughtsPage() {
             <div className="relative">
               <div className="flex items-center justify-between gap-4">
                 <div className="meta">Lead draft</div>
-                <div className="meta text-[11px] text-black/55">pending</div>
+                <div className="meta text-[11px] text-black/55">
+                  {LEAD.status}
+                </div>
               </div>
 
               <div className="mt-5">
                 <div className="inline-flex items-center gap-2">
                   <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-                    Markets
+                    {LEAD.tag}
                   </span>
-                  <span className="meta text-[11px] text-black/55">2026</span>
+                  <span className="meta text-[11px] text-black/55">
+                    {LEAD.year ?? "—"}
+                  </span>
                 </div>
 
                 <h3 className="mt-4 text-2xl md:text-3xl font-semibold leading-tight">
-                  Inventory Risk and Market Structure
+                  {LEAD.title}
                 </h3>
                 <p className="mt-3 text-[14px] md:text-[15px] text-black/65 leading-relaxed max-w-prose">
-                  An examination of how dealer inventory constraints, positioning, and liquidity
-                  provision shape volatility and price dynamics.
+                  {LEAD.desc}
                 </p>
+
+                <div
+                  className="pointer-events-none absolute left-7 right-7 bottom-6 h-px opacity-70"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(var(--gold-rgb)/0.65), transparent)",
+                  }}
+                />
               </div>
             </div>
           </div>
-             </div>
 
+          {/* compact stack (right column) */}
+          <div className="md:col-span-5 grid gap-4">
+            {DRAFTS.map((x) => (
+              <div
+                key={x.title}
+                className={[
+                  "paper relative overflow-hidden",
+                  "p-5 md:p-6",
+                  "border border-black/0", // keeps your existing paper style; remove if redundant
+                ].join(" ")}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
+                    {x.tag}
+                  </span>
+                  <span className="meta text-[11px] text-black/55">
+                    {x.status}
+                  </span>
+                </div>
 
-        {/* right column placeholders */}
-        <div className="md:col-span-5 grid gap-5">
-          {[
-            {
-              tag: "Fashion",
-              title: "Young Women as Economic Indicators",
-              desc:
-                "Young women are often the earliest adopters of risk, trend, and discretionary spending, making them subtle but powerful leading indicators of expansion and contraction.",
-            },
-            {
-              tag: "Languages",
-              title: "Language as Cultural Architecture: On German Etymology",
-              desc:
-                "A study of how German word origins encode cultural priorities, social structures, and ways of organizing thought.",
-            },
-            {
-              tag: "Essays",
-              title: "Boredom as a Method",
-              desc:
-                "What happens when you quite literally watch paint dry and how that fixed my attention span.",
-            },
-          ].map((x) => (
-            <div key={x.title} className="paper p-7 relative overflow-hidden">
-              <div className="flex items-center justify-between gap-4">
-                <span className="meta text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white/70">
-                  {x.tag}
-                </span>
-                <span className="meta text-[11px] text-black/55">draft</span>
+                <div className="mt-3">
+                  <h3 className="text-[16px] md:text-[17px] font-semibold leading-snug">
+                    {x.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] text-black/65 leading-relaxed">
+                    {x.desc}
+                  </p>
+                </div>
               </div>
-
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold leading-snug">{x.title}</h3>
-                <p className="mt-2 text-[13px] text-black/65 leading-relaxed">
-                  {x.desc}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        
       </section>
 
       {/* ===== FOOTER NOTE ===== */}
